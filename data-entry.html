@@ -24,28 +24,32 @@
     </style>
 
     <script lang="javascript">
-        function createRow(person) {
-            var tr = document.createElement("tr");
-            var id_td = document.createElement("td");
-            var firstName_td = document.createElement("td");
-            var lastName_td = document.createelement("td");
-
-            id_td.value = person.id;
-            firstName_td = person.firstName;
-            lastName_td = person.lastName;
-
-            tr.appendChild(id_td);
-            tr.appendChild(firstName_td);
-            tr.appendChild(lastName_td);
-
-            return tr;
+        function populateRow(row, person) {
+            row.insertCell(-1).innerText = person.id;
+            row.insertCell(-1).innerText = person.firstName;
+            row.insertCell(-1).innerText = person.lastName;
         }
         function updateTable() {
-            var tableElm = document.getElementById("people");
+            var people_table = document.querySelector("#people");
+
+            var tbodies = people_table.querySelectorAll("tbody");
+            tbodies.forEach(tbody => {
+                tbody.remove();
+            });
+
+            var tbody = people_table.createTBody();
+
+            for (let idx = 0; idx < localStorage.length; idx++) {
+                const key = localStorage.key(idx);
+                var person_record = localStorage.getItem(key);
+                var person = JSON.parse(person_record);
+
+                var row = tbody.insertRow(-1);
+                populateRow(row, person);
+            }
         }
 
         function save() {
-
             var person = {
                 id: document.getElementById("personId").value,
                 firstName: document.getElementById("firstName").value,
@@ -67,12 +71,13 @@
                 console.error(error);
             }
             console.log("success.");
+            updateTable();
             return false;
         }
     </script>
 </head>
 
-<body>
+<body onload="updateTable()">
     <div id="person-record">
         <form onsubmit="return save()">
             <input id="personId" type="hidden">
