@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Page Title</title>
+
+    <style>
+        #people {
+            border: solid 2px;
+            border-spacing: 0px;
+        }
+
+        #people th {
+            border: solid 1px;
+            padding: 4px;
+            padding-bottom: 2px;
+        }
+
+        #people td {
+            border: solid 1px;
+            padding: 2px 4px 2px 4px;
+        }
+    </style>
+
+    <script lang="javascript">
+        function createRow(person) {
+            var tr = document.createElement("tr");
+            var id_td = document.createElement("td");
+            var firstName_td = document.createElement("td");
+            var lastName_td = document.createelement("td");
+
+            id_td.value = person.id;
+            firstName_td = person.firstName;
+            lastName_td = person.lastName;
+
+            tr.appendChild(id_td);
+            tr.appendChild(firstName_td);
+            tr.appendChild(lastName_td);
+
+            return tr;
+        }
+        function updateTable() {
+            var tableElm = document.getElementById("people");
+        }
+
+        function save() {
+
+            var person = {
+                id: document.getElementById("personId").value,
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value
+            };
+
+            if (person.id === "") {
+                person.id = parseInt(localStorage.length + 1);
+            }
+
+            var key = person.id;
+            var record = JSON.stringify(person);
+
+            console.log(`Saving\n  key=${key}\n  record=${record}\n`);
+            try {
+                localStorage.setItem(key, record);
+            } catch (error) {
+                alert("Record was not saved.\nReview the console output for details (or as your operator to help you).");
+                console.error(error);
+            }
+            console.log("success.");
+            return false;
+        }
+    </script>
+</head>
+
+<body>
+    <div id="person-record">
+        <form onsubmit="return save()">
+            <input id="personId" type="hidden">
+
+            <label for="firstName">First Name:</label>
+            <input id="firstName" type="text">
+
+            <label for="lastName">Last Name:</label>
+            <input id="lastName" type="text">
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <table id="people">
+        <thead>
+            <th>ID</th>
+            <th>First</th>
+            <th>Last</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>John</td>
+                <td>Doe</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Joey</td>
+                <td>Doe</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</body>
+
+</html>
